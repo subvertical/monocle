@@ -61,6 +61,8 @@ public_queries = (
     "most_active_authors_stats",
     "most_reviewed_authors_stats",
     "last_merged_changes",
+    "last_review_events",
+    "last_comment_events",
     "last_opened_changes",
     "last_state_changed_changes",
     "oldest_open_changes",
@@ -665,6 +667,31 @@ def last_opened_changes(es, index, repositories, params):
     data = run_query(es, index, body)
     changes = [r['_source'] for r in data['hits']['hits']]
     return {'items': changes, 'total': data['hits']['total']}
+
+
+def last_events(es, index, repositories, params):
+    params = deepcopy(params)
+    body = {
+        "sort": [{"created_at": {"order": "desc"}}],
+        "size": params['size'],
+        "from": params['from'],
+        "query": generate_filter(repositories, params),
+    }
+    data = run_query(es, index, body)
+    events = [r['_source'] for r in data['hits']['hits']]
+    return {'items': events, 'total': data['hits']['total']}
+
+
+def last_review_events(es, index, repositories, params):
+    params = deepcopy(params)
+    params['etype'] = ("ChangeReviewedEvent",)
+    return last_events(es, index, repositories, params)
+
+
+def last_comment_events(es, index, repositories, params):
+    params = deepcopy(params)
+    params['etype'] = ("ChangeCommentedEvent",)
+    return last_events(es, index, repositories, params)
 
 
 def last_state_changed_changes(es, index, repositories, params):
