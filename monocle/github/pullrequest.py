@@ -201,13 +201,15 @@ class PRsFetcher(object):
             edges {
               node {
                 ... on PullRequest {
-                    %(pr_query)s
+                  updatedAt
                 }
               }
             }
           }
         }'''  # noqa: E501
+        pprint(qdata % kwargs)
         data = self.gql.query(qdata % kwargs)
+        pprint(data)
         if not kwargs['total_prs_count']:
             kwargs['total_prs_count'] = data['data']['search']['issueCount']
             self.log.info("Total PRs to fetch: %s" % kwargs['total_prs_count'])
@@ -468,13 +470,14 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(prog='pullrequest')
 
+    parser.add_argument('--crawler', help='run crawler', action='store_true')
     parser.add_argument('--loglevel', help='logging level', default='INFO')
     parser.add_argument('--token', help='A Github personal token', required=True)
     parser.add_argument('--org', help='A Github organization', required=True)
     parser.add_argument(
         '--repository', help='The repository within the organization', required=True
     )
-    parser.add_argument('--id', help='The pull request id', required=True)
+    parser.add_argument('--id', help='The pull request id')
     parser.add_argument(
         '--output-dir', help='Store the dump in this directory',
     )
@@ -488,11 +491,15 @@ if __name__ == '__main__':
         args.org,
         args.repository,
     )
-    data = prf.get_one(args.org, args.repository, args.id)
-    if not args.output_dir:
-        pprint(data)
+    if args.crawler:
+        prs = prf.get(updated_since='2020-01-01')
+        pprint(prs)
     else:
-        basename = "github.com-%s-%s-%s" % (args.org, args.repository, args.id)
-        basepath = os.path.join(args.output_dir, basename)
-        json.dump(data[0], open(basepath + '_raw.json', 'w'), indent=2)
-        json.dump(data[1], open(basepath + '_extracted.json', 'w'), indent=2)
+        data = prf.get_one(args.org, args.repository, args.id)
+        if not args.output_dir:
+            pprint(data)
+        else:
+            basename = "github.com-%s-%s-%s" % (args.org, args.repository, args.id)
+            basepath = os.path.join(args.output_dir, basename)
+            json.dump(data[0], open(basepath + '_raw.json', 'w'), indent=2)
+            json.dump(data[1], open(basepath + '_extracted.json', 'w'), indent=2)
