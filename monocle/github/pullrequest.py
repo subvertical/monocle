@@ -220,7 +220,7 @@ class PRsFetcher(object):
             self.log.info("Total PRs to fetch: %s" % kwargs['total_prs_count'])
         if 'data' not in data:
             self.log.error('No data collected: %s' % data)
-            return False
+            return None
         for pr in data['data']['search']['edges']:
             prs.append(pr['node'])
         pageInfo = data['data']['search']['pageInfo']
@@ -279,7 +279,7 @@ class PRsFetcher(object):
                 continue
             self.log.info("%s PRs fetched" % len(prs))
             if not hnp:
-                if len(prs) < kwargs['total_prs_count']:
+                if hnp is None and len(prs) < kwargs['total_prs_count']:
                     kwargs['created_before'] = prs[-1]['createdAt']
                     kwargs['after'] = ''
                     continue
