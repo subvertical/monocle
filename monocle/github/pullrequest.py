@@ -431,8 +431,10 @@ class PRsFetcher(object):
             change['commit_count'] = int(pr['commits']['totalCount'])
             if pr['mergedBy']:
                 change['merged_by'] = get_login(pr['mergedBy'])
+                change['self_merged'] = change['merged_by'] == change['author']
             else:
                 change['merged_by'] = None
+                change['self_merged'] = False
             change['updated_at'] = pr['updatedAt']
             change['created_at'] = pr['createdAt']
             change['merged_at'] = pr['mergedAt']

@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Added
 
+- [crawler] compute if a change is self merged.
 - [cli] add dbmanage option to delete a Monocle index.
 - [web] add the approvals and exclude_approvals filters available into the changes pages.
 - [api] add the exclude_approvals paramater support.
@@ -26,6 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - [crawler] github application: use authlib.jose.jwt instead of pyjwt.
 
 ### Removed
+
 ### Fixed
 
 - [api] validate updated_since date format in the configuration file.

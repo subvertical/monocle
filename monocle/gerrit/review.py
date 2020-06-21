@@ -247,6 +247,7 @@ class ReviewesFetcher(object):
                         review['submitter'].get('name'),
                         review['submitter']['_account_id'],
                     )
+                    change['self_merge'] = change['merged_by'] == change['author']
             else:
                 change['merged_by'] = None
             objects.append(change)
