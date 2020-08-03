@@ -63,7 +63,7 @@ def float_trunc(f, n=2):
 
 
 class Detector(object):
-    tests_regexp = ".*[Tt]est.*"
+    tests_regexp = ".*\_spec.*"
     tests_re = re.compile(tests_regexp)
 
     issue_tracker_links = {

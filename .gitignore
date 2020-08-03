@@ -9,3 +9,10 @@ etc
 .mypy_cache
 .env
 docker-compose.yml
+/.idea/.gitignore
+/.idea/misc.xml
+/.idea/modules.xml
+/.idea/monocle.iml
+/.idea/inspectionProfiles/profiles_settings.xml
+/.idea/inspectionProfiles/Project_Default.xml
+/.idea/vcs.xml
